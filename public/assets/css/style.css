@@ -1,0 +1,35 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7d23d; /* Jaune Carambar */
+  color: #e31837; /* Rouge Carambar */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+h1 {
+  font-size: 3em;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+button {
+  padding: 15px 30px;
+  font-size: 1.2em;
+  color: white;
+  background-color: #e31837;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #c9152b;
+}
+#blague-container {
+  margin-top: 20px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+}

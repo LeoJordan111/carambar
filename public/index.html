@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Blagues Carambar</title>
+    <link rel="stylesheet" href="/assets/css/style.css" />
+  </head>
+  <body>
+    <h1>Carambart c'est de la barre</h1>
+    <button id="get-blague">Afficher une blague</button>
+    <div id="blague-container"></div>
+
+    <a href="add_joke.html" class="button-link">Créer une blague</a>
+
+    <script>
+      document
+        .getElementById("get-blague")
+        .addEventListener("click", async () => {
+          const response = await fetch("/api/blague");
+          const data = await response.json();
+          document.getElementById("blague-container").textContent = data.blague;
+        });
+    </script>
+    <script src="/assets/js/script.js"></script>
+  </body>
+</html>

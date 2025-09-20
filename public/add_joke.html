@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Créer une Blague</title>
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <style>
+      .form-container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 500px;
+        text-align: left;
+      }
+      label,
+      textarea,
+      button {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        min-height: 100px;
+        font-size: 1em;
+      }
+      #message-box {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        display: none;
+        text-align: center;
+      }
+      #message-box.success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      #message-box.error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .button-link {
+        text-align: center;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #e31837;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>Créer une nouvelle blague</h1>
+      <form id="joke-form">
+        <label for="joke-text">Votre blague Carambar :</label>
+        <textarea id="joke-text" name="joke-text" required></textarea>
+        <button type="submit">Envoyer</button>
+      </form>
+      <div id="message-box"></div>
+      <a href="index.html" class="button-link">Retour à la page d'accueil</a>
+    </div>
+
+    <script>
+      document
+        .getElementById("joke-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const jokeText = document.getElementById("joke-text").value;
+          const messageBox = document.getElementById("message-box");
+
+          try {
+            const response = await fetch("/api/blague", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ blague: jokeText }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              messageBox.textContent = data.message;
+              messageBox.className = "success";
+              document.getElementById("joke-form").reset();
+            } else {
+              messageBox.textContent = data.error;
+              messageBox.className = "error";
+            }
+          } catch (error) {
+            messageBox.textContent = "Une erreur est survenue lors de l'envoi.";
+            messageBox.className = "error";
+            console.error("Erreur:", error);
+          }
+          messageBox.style.display = "block";
+        });
+    </script>
+  </body>
+</html>
