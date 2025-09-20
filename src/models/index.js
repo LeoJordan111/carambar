@@ -1,26 +1,44 @@
-const { Model, DataTypes } = require('sequelize');
+'use strict';
 
-// Cette fonction définit le modèle 'Joke' pour Sequelize.
-// Le fichier index.js du même dossier va l'appeler pour créer la table dans la base de données.
-module.exports = (sequelize) => {
-    class Joke extends Model {}
-    
-    // Initialise le modèle avec les colonnes de la table
-    Joke.init({
-        // La colonne 'blague' qui stockera le texte de la blague.
-        blague: {
-            type: DataTypes.STRING,
-            allowNull: false
-        }
-    }, {
-        sequelize, // L'instance de connexion à la base de données
-        // Nom de la table dans la base de données
-        tableName: 'jokes',
-        // Désactive les colonnes createdAt et updatedAt car elles ne sont pas nécessaires ici.
-        timestamps: false,
-        // Nom du modèle
-        modelName: 'Joke'
-    });
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const process = require('process');
 
-    return Joke;
-};
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
+const db = {};
+
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config);
+}
+
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+    );
+  })
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;
