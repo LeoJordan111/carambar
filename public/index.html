@@ -7,19 +7,34 @@
     <link rel="stylesheet" href="/assets/css/style.css" />
   </head>
   <body>
-    <h1>Carambart c'est de la barre</h1>
-    <button id="get-blague">Afficher une blague</button>
-    <div id="blague-container"></div>
+    <div class="joke-container">
+      <h1>Carambart c'est de la barre</h1>
+      <button id="get-joke">Afficher une blague</button>
+      <div id="joke-display"></div>
 
-    <a href="add_joke.html" class="button-link">Créer une blague</a>
-
+      <a href="add_joke.html" class="button-link">Créer une blague</a>
+    </div>
     <script>
       document
-        .getElementById("get-blague")
+        .getElementById("get-joke")
         .addEventListener("click", async () => {
-          const response = await fetch("/api/blague");
-          const data = await response.json();
-          document.getElementById("blague-container").textContent = data.blague;
+          const jokeDisplay = document.getElementById("joke-display");
+          jokeDisplay.textContent = "Chargement...";
+
+          try {
+            const response = await fetch("/api/blague");
+            const data = await response.json();
+
+            if (response.ok) {
+              jokeDisplay.textContent = data.blague;
+            } else {
+              jokeDisplay.textContent = data.error;
+            }
+          } catch (error) {
+            jokeDisplay.textContent =
+              "Erreur lors de la récupération de la blague.";
+            console.error("Erreur:", error);
+          }
         });
     </script>
     <script src="/assets/js/script.js"></script>
